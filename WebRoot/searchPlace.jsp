@@ -25,7 +25,7 @@
 	var map = new BMap.Map("container");
 	var localSearch = new BMap.LocalSearch(map);
 	var houses = "${houses}";
-
+//
 	function searchByStationName() {
 
 		$("#result_").html('<tr><td>查找名称</td><td>经度</td><td>维度</td></tr>')
