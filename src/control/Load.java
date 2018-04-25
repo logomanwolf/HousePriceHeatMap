@@ -33,66 +33,63 @@ public class Load extends HttpServlet {
 
 	/**
 	 * The doGet method of the servlet. <br>
-	 *
+	 * 
 	 * This method is called when a form has its tag value method equals to get.
 	 * 
-	 * @param request the request send by the client to the server
-	 * @param response the response send by the server to the client
-	 * @throws ServletException if an error occurred
-	 * @throws IOException if an error occurred
+	 * @param request
+	 *            the request send by the client to the server
+	 * @param response
+	 *            the response send by the server to the client
+	 * @throws ServletException
+	 *             if an error occurred
+	 * @throws IOException
+	 *             if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		response.setContentType("text/html");
-		HousePriceDao housepricedao=new HousePriceDao();
-		List<House> houses=new ArrayList<House>();
-		houses=housepricedao.selectHouse();
-		request.setAttribute("houses", houses);
+		HousePriceDao housepricedao = new HousePriceDao();
+		List<House> houses = new ArrayList<House>();
+		houses = housepricedao.selectHouse();
 		request.getSession().setAttribute("houses", houses);
-		String addresses="";
-	    for(House house:houses){
-	    	addresses+=house.getAddr().replace(" ", "")+"#";
-	    }
-	    addresses.substring(0, addresses.length()-2);
-	    request.setAttribute("addresses", addresses);
-	    System.out.println(addresses);
-	    RequestDispatcher rd=request.getRequestDispatcher("searchPlace.jsp");
-	    rd.forward(request, response);
+		String addresses = "";
+		for (House house : houses) {
+			addresses += house.getAddr().replace(" ", "") + "#";
+		}
+		addresses.substring(0, addresses.length() - 2);
+		request.setAttribute("addresses", addresses);
+		System.out.println(addresses);
+		RequestDispatcher rd = request.getRequestDispatcher("searchPlace.jsp");
+		rd.forward(request, response);
+
 	}
 
 	/**
 	 * The doPost method of the servlet. <br>
-	 *
-	 * This method is called when a form has its tag value method equals to post.
 	 * 
-	 * @param request the request send by the client to the server
-	 * @param response the response send by the server to the client
-	 * @throws ServletException if an error occurred
-	 * @throws IOException if an error occurred
+	 * This method is called when a form has its tag value method equals to
+	 * post.
+	 * 
+	 * @param request
+	 *            the request send by the client to the server
+	 * @param response
+	 *            the response send by the server to the client
+	 * @throws ServletException
+	 *             if an error occurred
+	 * @throws IOException
+	 *             if an error occurred
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-		out.println("<HTML>");
-		out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
-		out.println("  <BODY>");
-		out.print("    This is ");
-		out.print(this.getClass());
-		out.println(", using the POST method");
-		out.println("  </BODY>");
-		out.println("</HTML>");
-		out.flush();
-		out.close();
+		   doGet(request, response);
 	}
 
 	/**
 	 * Initialization of the servlet. <br>
-	 *
-	 * @throws ServletException if an error occurs
+	 * 
+	 * @throws ServletException
+	 *             if an error occurs
 	 */
 	public void init() throws ServletException {
 		// Put your code here

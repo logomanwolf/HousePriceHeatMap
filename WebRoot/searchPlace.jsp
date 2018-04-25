@@ -18,7 +18,7 @@
 			<input type="submit" value="提交"/>
 		</form>
 		<table id="result_"></table>
-		<div id="container"></div>
+		<div id="container"><img src="pic/东方君悦.jpg" style="height:200px; "></img></div>
 	</div>
 </body>
 <script type="text/javascript">
