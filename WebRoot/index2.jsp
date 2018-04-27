@@ -46,12 +46,6 @@ body {
 		<input type="button" onclick="openHeatmap();" value="显示热力图" /> 
 		<input type="button" onclick="closeHeatmap();" value="关闭热力图" /> 
 		<input type="button" onclick="openMarker()" value="打开标注" />
-		<br>
-		<form action="selectPriceToLoadMap.do" method="post">
-		最低价格:<input type="text" name="minPrice">
-		最高价格:<input type="text" name="maxPrice">
-		<input type="submit" value="查询" onclick="openHeatmap();">
-		</form>
 	</div>
 	<div>
 		<textarea id="_position" hidden="hidden"></textarea>
