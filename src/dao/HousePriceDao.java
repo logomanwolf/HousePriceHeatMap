@@ -79,6 +79,26 @@ public class HousePriceDao extends BaseDao {
 			}
 			return result;
 		}
+	//根据地铁
+		public List<Position> selectHouseBySubway(String sql) {
+			List<Position> result = new ArrayList<Position>();
+			ResultSet rs = this.executeQuery(sql, null);
+			try {
+				while (rs.next()) {
+					Position po=new Position();
+					po.setLng(rs.getString("lng"));
+					po.setLat(rs.getString("lat"));
+					po.setCount(rs.getString("aver"));
+					result.add(po);
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				this.close();
+			}
+			return result;
+		}
 	
 	//用于更新房子的经纬度
 	public Integer updateHouses(List<House> houses) {

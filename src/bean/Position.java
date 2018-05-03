@@ -5,7 +5,13 @@ import java.io.Serializable;
 public class Position implements Serializable {
 	private String lat;// 纬度
 	private String lng;// 经度
-	 private String count;//权重
+	private String count;//权重
+	
+	public Position(){}
+	public Position(String lng,String lat){
+		this.lat=lat;
+		this.lng=lng;
+	}
 	public String getLat() {
 		return lat;
 	}
