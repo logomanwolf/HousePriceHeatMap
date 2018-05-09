@@ -36,7 +36,7 @@ public class HousePriceDao extends BaseDao {
 	
 	//用于得到所有的经纬度信息
 	public List<Position> selectUsableHouse() {
-		String sql="SELECT DISTINCT house.lng, house.lat,house.aver FROM myscheme.house WHERE house.lng > 0;";
+		String sql="SELECT DISTINCT house.lng, house.lat,house.aver FROM house WHERE house.lng > 0;";
 		List<Position> result = new ArrayList<Position>();
 		ResultSet rs = this.executeQuery(sql, null);
 		try {
@@ -58,7 +58,7 @@ public class HousePriceDao extends BaseDao {
 	
 	//用于得到挑选的的经纬度信息
 		public List<Position> selectSuitableHouse(int minPrice,int maxPrice) {
-			String sql="SELECT DISTINCT house.lng, house.lat,house.aver FROM myscheme.house WHERE house.lng > 0 and house.aver>="+
+			String sql="SELECT DISTINCT house.lng, house.lat,house.aver FROM house WHERE house.lng > 0 and house.aver>="+
 		               String.valueOf(minPrice)+" and house.aver<="+ String.valueOf(maxPrice)+";";
 			System.out.println(sql);
 			List<Position> result = new ArrayList<Position>();

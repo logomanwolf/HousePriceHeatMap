@@ -68,7 +68,7 @@ public class SelectBySubway extends HttpServlet{
 		pos.add(p15);
 		pos.add(p16);
 		pos.add(p17);
-		String sql="SELECT DISTINCT house.lng, house.lat,house.aver FROM myscheme.house WHERE ";
+		String sql="SELECT DISTINCT house.lng, house.lat,house.aver FROM house WHERE ";
 		for(int i=0;i<pos.size();i++){
 			Position p=pos.get(i);
 			double minLng=Double.parseDouble(p.getLng())-lngRange;
