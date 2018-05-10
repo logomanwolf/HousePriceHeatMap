@@ -36,10 +36,17 @@
 					<div class="col-sm-6">
 						<p></p>
 						<label class="pull-left inline"> <small class="muted">热力图:</small>
-							<input id="id-pills-stacked"  type="checkbox"
-							hidden="hidden" onchange="changeHeatmap()"
-							class="ace ace-switch ace-switch-5" /> <span class="lbl middle"></span>
+							<input id="id-pills-stacked" type="checkbox" hidden="hidden"
+							onchange="changeHeatmap()" class="ace ace-switch ace-switch-5" />
+							<span class="lbl middle"></span>
 						</label>
+						<p></p>
+						<label class="pull-left inline"> <small class="muted">地铁:</small>
+							<input id="subwayAvailable" type="checkbox" hidden="hidden"
+							onchange="changeSubway()" class="ace ace-switch ace-switch-5" />
+							<span class="lbl middle"></span>
+						</label>
+
 					</div>
 					<div class="col-sm-6">
 						<label for="amount">价格区间:</label> <input type="text" id="amount"
@@ -154,12 +161,12 @@
 
 		}
 		function openMarker() {
-			var _html;
+
 			var p;
 			for (var i = 0; i < 10; i++) {
 				var hotPoint = new BMap.Point(points[i].lng, points[i].lat);
 				var marker = new BMap.Marker(hotPoint); // 创建标注
-				_html = "<div>经纬度：";
+				var _html = "<div>经纬度：";
 				p = marker.getPosition();
 				_html += p.lng + "," + p.lat;
 				_html += "<img src=\"pic/东方君悦.jpg\" style=\"height:200px; \"></img>";
@@ -170,6 +177,35 @@
 				});
 			}
 		}
+		function changeSubway() {
+			$.ajax({
+				async : false,
+				type : "POST",
+				url : "selectBySubway.do",
+				contentType : "application/json; charset=utf-8",
+				data : JSON.stringify(${usableHouses}),
+				/* data : {
+					"type" : "ys"
+				}, */
+				dataType : "json",
+				success : function(data) {
+					heatmapOverlay.setDataSet({
+						data : data,
+						max : ${maxCount}
+
+					});
+					map.addOverlay(heatmapOverlay);
+					heatmapOverlay.show();
+					 
+					if (!$("#id-pills-stacked").get(0).checked)
+						$("#id-pills-stacked").get(0).checked = true;
+				},
+				error : function(data) {
+					alert("failed");
+				},
+			});
+		}
+
 		$(function() {
 			$("#slider-range")
 					.slider(
@@ -179,6 +215,8 @@
 								max : ${maxCount},
 								values : section,
 								slide : function(event, ui) {
+									if (!$("#id-pills-stacked").get(0).checked)
+										$("#id-pills-stacked").get(0).checked = true;
 									$("#amount").val(
 											"$" + ui.values[0] + " - $"
 													+ ui.values[1]);
@@ -211,6 +249,7 @@
 
 										}
 									});
+									$("#subwayAvailable").get(0).checked = false;
 
 								}
 							});
