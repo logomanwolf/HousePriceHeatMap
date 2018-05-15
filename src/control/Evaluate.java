@@ -2,27 +2,24 @@ package control;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import dao.HousePriceDao;
-import bean.*;
+import bean.HouseEval;
+import bean.Position;
 
-public class LoadMap<E> extends HttpServlet {
+public class Evaluate extends HttpServlet {
 
 	/**
-	 * 用于初始化整个地图
+	 * Constructor of the object.
 	 */
-	public LoadMap() {
+	public Evaluate() {
 		super();
 	}
 
@@ -50,33 +47,20 @@ public class LoadMap<E> extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HousePriceDao housePriceDao = new HousePriceDao();
-		List<Position> usableHouses = new ArrayList<Position>();
-		usableHouses = housePriceDao.selectUsableHouse();
-		// String jsonString = JSONArray.toJSONString(usableHouses);
-		// PrintWriter out=response.getWriter();
-		// out.print("<html><h1>"+jsonString+"</h1></html>");
-		int num = usableHouses.size();
-		System.out.println(usableHouses.size());
-		Double lngSum = (double) 0;
-		Double latSum = (double) 0;
-		Double maxCount = 0d;
-		for (Position po : usableHouses) {
-			if (Double.parseDouble(po.getCount()) > maxCount)
-				maxCount = Double.parseDouble(po.getCount());
-			lngSum += Double.parseDouble(po.getLng());
-			latSum += Double.parseDouble(po.getLat());
-		}
-		Double avg_lng = lngSum / num;
-		Double avg_lat = latSum / num;
-		String jsonString = JSONArray.toJSONString(usableHouses);
-		request.getSession().setAttribute("usableHouses", jsonString);
-		request.getSession().setAttribute("avg_lng", avg_lng);
-		request.getSession().setAttribute("avg_lat", avg_lat);
-		request.getSession().setAttribute("maxCount", maxCount);
-		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		//RequestDispatcher rd = request.getRequestDispatcher("index3.jsp");
-		rd.forward(request, response);
+
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+		out.println("<HTML>");
+		out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
+		out.println("  <BODY>");
+		out.print("    This is ");
+		out.print(this.getClass());
+		out.println(", using the GET method");
+		out.println("  </BODY>");
+		out.println("</HTML>");
+		out.flush();
+		out.close();
 	}
 
 	/**
@@ -96,7 +80,18 @@ public class LoadMap<E> extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doGet(request, response);
+		String lat = request.getParameter("lat");
+		System.out.println("lat:"+lat);
+		String lng = request.getParameter("lng");
+		Position po = new Position(lng, lat);
+		HouseEval houseEval = new HousePriceDao().selectHouseEval(po);
+		response.setContentType("text/html");
+		response.setCharacterEncoding("utf-8");
+		PrintWriter out = response.getWriter();
+		String jsonString = JSONArray.toJSONString(houseEval);
+		out.write(jsonString);
+		System.out.println(jsonString);
+		out.close();
 	}
 
 	/**

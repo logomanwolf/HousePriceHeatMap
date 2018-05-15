@@ -21,7 +21,7 @@ import dao.HousePriceDao;
 public class AddSubway extends HttpServlet {
 
 	/**
-	 * Constructor of the object.
+	 * 主要是用来往数据库添加地铁坐标的
 	 */
 	public AddSubway() {
 		super();

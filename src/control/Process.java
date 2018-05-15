@@ -16,7 +16,7 @@ import dao.HousePriceDao;
 public class Process extends HttpServlet {
 
 	/**
-	 * Constructor of the object.
+	 * 用于分解字符串（预处理批量地址信息），是在坐标化的前一步.
 	 */
 	public Process() {
 		super();

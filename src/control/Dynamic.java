@@ -20,7 +20,7 @@ import dao.HousePriceDao;
 public class Dynamic extends HttpServlet {
 
 	/**
-	 * Constructor of the object.
+	 * 用于实时更新滑块设置的区间
 	 */
 	public Dynamic() {
 		super();
@@ -71,6 +71,8 @@ public class Dynamic extends HttpServlet {
 		String jsonString = JSONArray.toJSONString(usableHouses);
 		request.getSession().setAttribute("usableHouses", jsonString);
 		request.getSession().setAttribute("avg_lng", avg_lng);
+		request.setAttribute("avg_lng", avg_lng);
+		System.out.println("avg_lng"+avg_lng);
 		request.getSession().setAttribute("avg_lat", avg_lat);
 		request.getSession().setAttribute("maxCount", maxCount);
 		response.setCharacterEncoding("UTF-8");

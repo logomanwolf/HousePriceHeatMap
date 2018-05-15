@@ -56,7 +56,7 @@ public class BaseDao {
     
     //执行读操作方法
     public java.sql.ResultSet executeQuery(String query,
-                    List<Object> params) {
+                    List<String> params) {
         
         try {
         	getConnection();
@@ -65,7 +65,7 @@ public class BaseDao {
             //4、执行
             if(params!=null && params.size()>0){
                 for(int i=0;i<params.size();i++){
-                    pstmt.setObject(i+1, params.get(i));
+                    pstmt.setString(i+1, params.get(i));
                 }
             }
             rs = pstmt.executeQuery();

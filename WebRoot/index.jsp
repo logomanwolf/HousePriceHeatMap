@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <link rel="stylesheet"
@@ -91,7 +90,7 @@
 		 */
 
 		heatmapOverlay = new BMapLib.HeatmapOverlay({
-			"radius" : 20,
+			"radius" : 15,
 			maxOpacity : .99,
 			minOpacity : 0,
 		});
@@ -160,6 +159,12 @@
 				closeHeatmap();
 
 		}
+		function changeCenter(lng, lat) {
+			//	alert(lng);
+			var center = new BMap.Point(lng, lat);
+			map.centerAndZoom(center, 15);
+		}
+
 		function openMarker() {
 
 			var p;
@@ -183,7 +188,7 @@
 				type : "POST",
 				url : "selectBySubway.do",
 				contentType : "application/json; charset=utf-8",
-				data : JSON.stringify(${usableHouses}),
+				data : JSON.stringify(points),
 				/* data : {
 					"type" : "ys"
 				}, */
@@ -196,7 +201,7 @@
 					});
 					map.addOverlay(heatmapOverlay);
 					heatmapOverlay.show();
-					 
+
 					if (!$("#id-pills-stacked").get(0).checked)
 						$("#id-pills-stacked").get(0).checked = true;
 				},
@@ -205,7 +210,75 @@
 				},
 			});
 		}
+		//单击获取点击的经纬度
+		map
+				.addEventListener(
+						"click",
+						function(e) {
+							$("#s-point").text(e.point.lng + "," + e.point.lat);
 
+							//	var clickPoint = e.point;
+							for (var i = 0; i < points.length; i++) {
+								if (Math
+										.abs(e.point.lat - points[i].lat < 0.001)
+										&& Math
+												.abs(e.point.lng
+														- points[i].lng) < 0.001) {
+									//alert(points[i].lng);
+									$
+											.ajax({
+												async : false,
+												type : "POST",
+												url : "evaluate.do",
+												//contentType : "charset=utf-8",
+												data : {
+													lng : points[i].lng,
+													lat : points[i].lat
+												},
+												/* data : {
+													"type" : "ys"
+												}, */
+												dataType : "json",
+												success : function(data) {
+													//alert("success");
+													var msg = JSON
+															.stringify(data);
+													var hotPoint = new BMap.Point(
+															points[i].lng,
+															points[i].lat);
+													var marker = new BMap.Marker(
+															hotPoint);
+
+													map.addOverlay(marker); // 将标注添加到地图中   
+													var dataObj = eval("("
+															+ msg + ")");
+													// alert(dataObj.name);
+													var _html = "<div>"
+															+ dataObj.name
+															+ "</div>"
+															+ "<div>房价：";
+													_html += dataObj.price
+															+ "</div>";
+
+													marker
+															.addEventListener(
+																	"click",
+																	function(e) {
+																		this
+																				.openInfoWindow(new BMap.InfoWindow(
+																						_html));
+																	});
+
+												},
+												error : function(data) {
+													alert("fialed");
+												},
+											});
+									break;
+								}
+							}
+
+						});
 		$(function() {
 			$("#slider-range")
 					.slider(
@@ -231,6 +304,7 @@
 										},
 										dataType : "json",
 										success : function(data) {
+											points = data;
 											heatmapOverlay.setDataSet({
 												data : data,
 												max : ${maxCount}
@@ -238,6 +312,7 @@
 											});
 											map.addOverlay(heatmapOverlay);
 											heatmapOverlay.show();
+
 											/*  $('#resText').empty();   //清空resText里面的所有内容
 											 var html = ''; 
 											 $.each(data, function(commentIndex, comment){

@@ -1,6 +1,8 @@
 package control;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import com.alibaba.fastjson.JSONArray;
 
 import dao.HousePriceDao;
 
+//用于选择地铁附近的点坐标
 public class SelectBySubway extends HttpServlet {
 	public SelectBySubway() {
 		super();
@@ -115,17 +118,46 @@ public class SelectBySubway extends HttpServlet {
 		List<Position> housesAroundSubway = new ArrayList<Position>();
 		housesAroundSubway = housePriceDao.selectHouseBySubway(sql);
 		System.out.println(housesAroundSubway.size());
-		String usableHousestr = (String) request.getSession().getAttribute(
-				"usableHouses");
+
+		request.setCharacterEncoding("utf-8");
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(
+					request.getInputStream(), "UTF-8"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String line = null;
+		StringBuilder sb = new StringBuilder();
+		try {
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// 将资料解码
+		String usableHousestr = sb.toString();
+
 		System.out.println(usableHousestr);
+		// 从前端获得的区间数据
 		List<Position> usableHouses = (List<Position>) JSONArray.parseArray(
 				usableHousestr, Position.class);
-		List<Position> copyList=new ArrayList<Position>(usableHouses);
-		for (Position po : copyList) {
-			if (!usableHouses.contains(po))
-				housesAroundSubway.remove(po);
+		// 拷贝区间数据
+		List<Position> copyHousesAroundSubway = new ArrayList<Position>();
+		for (Position copy : usableHouses) {
+			boolean flag = false;
+			for (Position po : housesAroundSubway) {
+				if (copy.getLng().equals(po.getLng())
+						&& copy.getLat().equals(po.getLat())) {
+					flag = true;
+	                copyHousesAroundSubway.add(copy);
+					break;
+				}
+			}
 		}
-		String jsonString = JSONArray.toJSONString(housesAroundSubway);
+		String jsonString = JSONArray.toJSONString(copyHousesAroundSubway);
+		System.out.println("地铁沿线点"+jsonString);
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(jsonString);

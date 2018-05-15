@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Test extends HttpServlet {
 
 	/**
-	 * Constructor of the object.
+	 * 在把地铁坐标存入数据库要做的
 	 */
 	public Test() {
 		super();

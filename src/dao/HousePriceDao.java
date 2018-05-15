@@ -6,12 +6,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bean.House;
+import bean.HouseEval;
 import bean.Position;
 import bean.Station;
 
 public class HousePriceDao extends BaseDao {
 
-	//读出地铁数据
+	//
+	public HouseEval selectHouseEval(Position pos) {
+		String sql = "SELECT  * FROM house where lng=? and lat=? ;";
+		HouseEval result = new HouseEval();
+		List<String> params = new ArrayList<String>();
+		params.add(pos.getLng());
+		params.add(pos.getLat());
+		ResultSet rs = this.executeQuery(sql, params);
+		try {
+			while (rs.next()) {
+				result.setLng(rs.getString("lng"));
+				result.setLat(rs.getString("lat"));
+				result.setPrice(rs.getLong("aver"));
+				result.setName(rs.getString("name"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			this.close();
+		}
+		return result;
+	}
+
+	// 读出地铁数据
 	public List<Position> selectSubways() {
 		String sql = "SELECT DISTINCT station.lng, station.lat FROM station ;";
 		List<Position> result = new ArrayList<Position>();
@@ -21,7 +46,7 @@ public class HousePriceDao extends BaseDao {
 				Position po = new Position();
 				po.setLng(rs.getString("lng"));
 				po.setLat(rs.getString("lat"));
-		//		po.setCount(rs.getString("aver"));
+				// po.setCount(rs.getString("aver"));
 				result.add(po);
 			}
 
@@ -32,8 +57,7 @@ public class HousePriceDao extends BaseDao {
 		}
 		return result;
 	}
-	
-	
+
 	// 插入地铁数据
 	public Integer addSubway(List<Station> stations) {
 		String sql = "";

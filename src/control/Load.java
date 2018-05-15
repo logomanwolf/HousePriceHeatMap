@@ -17,7 +17,7 @@ import dao.HousePriceDao;
 public class Load extends HttpServlet {
 
 	/**
-	 * Constructor of the object.
+	 * 用于取房价的坐标
 	 */
 	public Load() {
 		super();
