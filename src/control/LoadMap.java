@@ -20,7 +20,7 @@ import bean.*;
 public class LoadMap<E> extends HttpServlet {
 
 	/**
-	 * ÓÃÓÚ³õÊ¼»¯Õû¸öµØÍ¼
+	 * ï¿½ï¿½ï¿½Ú³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼
 	 */
 	public LoadMap() {
 		super();
@@ -74,9 +74,10 @@ public class LoadMap<E> extends HttpServlet {
 		request.getSession().setAttribute("avg_lng", avg_lng);
 		request.getSession().setAttribute("avg_lat", avg_lat);
 		request.getSession().setAttribute("maxCount", maxCount);
+		//RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-		//RequestDispatcher rd = request.getRequestDispatcher("index3.jsp");
 		rd.forward(request, response);
+		
 	}
 
 	/**

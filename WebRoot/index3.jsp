@@ -298,7 +298,7 @@ body,html {
 					success : function(data) {
 						//alert("success");
 						var msg = JSON.stringify(data);
-						var bus = 0;
+						var bus = {number:0};
 						var school = 0;
 						var supermarket = 0;
 
@@ -312,14 +312,12 @@ body,html {
 						var _html = "<div>" + dataObj.name + "</div>"
 								+ "<div>房价：";
 						_html += dataObj.price + "</div>";
-						alert("before");///////////////////////////
-						searchAndscore(bus, school, supermarket, marker);
-						_html += "<div>学校" + school + "</div>";
-						_html += "<div>超市" + bus + "</div>";
-						_html += "<div>公交站" + supermarket + "</div>";
-						marker.addEventListener("click", function(e) {
-							this.openInfoWindow(new BMap.InfoWindow(_html));
-						});
+						///////////////////////////
+						searchAndscore(bus,marker,_html);
+
+						alert(bus.number);
+						
+						
 
 					},
 					error : function(data) {
@@ -341,23 +339,46 @@ body,html {
 		}
 	});
 
-	//获取坐标周围100m范围内是否有学校，超市等
-	function searchAndscore(bus, school, supermarket, marker) {
+	//获取坐标周围500m范围内是否有学校，超市等
+	function searchAndscore(bus, marker,_html) {
 		map.centerAndZoom(marker.getPosition(), 15);
-		var local2 = new BMap.LocalSearch(marker.getPosition());
-		local2.setPageCapacity(100);
-		local2.searchNearby("公交站", marker.getPosition(), 1000);
-		local2.setSearchCompleteCallback(function(results) {
-			if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+		var radius=500;
 
-				bus = results.getNumPois();
-			}
-		});
-		local2.searchNearby("超市", marker.getPosition(), 1000);
-		local2.setSearchCompleteCallback(function(results) {
+		var options = {
+			onSearchComplete : function(results) {
+				//alert("Aaa:"+local2.getStatus());
+				if (local2.getStatus() == BMAP_STATUS_SUCCESS) {
+					setNumber(bus,results.getNumPois());
+					alert(bus.number);
+					_html += "<div>学校" + school + "</div>";
+					_html += "<div>超市" + bus.number + "</div>";
+					_html += "<div>公交站" + supermarket + "</div>";
+					marker.addEventListener("click", function(e) {
+						this.openInfoWindow(new BMap.InfoWindow(_html));
+					});
+				}
+				
+			},
+			pageCapacity : 100,
+		};
+		var local2 = new BMap.LocalSearch(map, options);
+        //local2.search("公交站");
+        //alert(marker.getPosition().lng+marker.getPosition().lat);
+		local2.searchNearby("公交站",marker.getPosition(), radius);
+		local2.searchNearby("公交站",marker.getPosition(), radius);
+		local2.searchNearby("公交站",marker.getPosition(), radius);
+		/* 		local2.setSearchCompleteCallback(function(results) {
+		 alert("results"+results.getNumPois());
+		 if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+		 bus = results.getNumPois();
+		 }
+		 }); */
+		//alert("bus"+bus);
+	//	local2.searchNearby("超市", marker.getPosition(), 1000);
+		/* local2.setSearchCompleteCallback(function(results) {
 			if (local.getStatus() == BMAP_STATUS_SUCCESS) {
 				supermarket = results.getNumPois();
-				alert( results.getNumPois());
+				alert(results.getNumPois());
 			}
 		});
 		local2.searchNearby("学校", marker.getPosition(), 1000);
@@ -365,9 +386,12 @@ body,html {
 			if (local.getStatus() == BMAP_STATUS_SUCCESS) {
 				school = results.getNumPois();
 			}
-		});
+		}); */
 	}
 
+	function setNumber(obj,number){
+		obj.number=number;
+	}
 	local.setPageCapacity(100);
 	//地址检索
 	function doSearch() {

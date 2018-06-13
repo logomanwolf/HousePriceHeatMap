@@ -21,7 +21,7 @@ import dao.HousePriceDao;
 public class AddSubway extends HttpServlet {
 
 	/**
-	 * Ö÷ÒªÊÇÓÃÀ´ÍùÊý¾Ý¿âÌí¼ÓµØÌú×ø±êµÄ
+	 * ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	public AddSubway() {
 		super();
@@ -51,6 +51,8 @@ public class AddSubway extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
 		request.setCharacterEncoding("utf-8");
 		BufferedReader br = null;
 		try {
@@ -68,7 +70,7 @@ public class AddSubway extends HttpServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// ½«×ÊÁÏ½âÂë
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½
 		String data = sb.toString();
 		System.out.println(data);
 		List<Station> stations = JSON.parseArray(data, Station.class);
